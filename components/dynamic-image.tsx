@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const fallbackDataUrl =
   'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600"%3E%3Cdefs%3E%3ClinearGradient id="g" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%23061B3A"/%3E%3Cstop offset="100%25" stop-color="%23ff9f0a"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="1200" height="1600" fill="url(%23g)"/%3E%3Ccircle cx="300" cy="380" r="220" fill="rgba(255,255,255,0.12)"/%3E%3Ccircle cx="900" cy="1180" r="320" fill="rgba(255,255,255,0.10)"/%3E%3C/svg%3E';
@@ -63,6 +63,7 @@ export default function DynamicImage({
 }: DynamicImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   const resolvedSrc = useMemo(() => {
     if (hasError) {
@@ -71,6 +72,12 @@ export default function DynamicImage({
 
     return src || fallbackSrc || fallbackDataUrl;
   }, [fallbackSrc, hasError, src]);
+
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete) {
+      setLoaded(true);
+    }
+  }, [resolvedSrc]);
 
   const useNextImage = isOptimizableSource(resolvedSrc);
   const imageStateClasses = loaded ? 'opacity-100 blur-0 scale-100' : 'opacity-0 blur-[10px] scale-[1.03]';
@@ -81,6 +88,7 @@ export default function DynamicImage({
 
       {useNextImage ? (
         <Image
+          ref={imgRef}
           src={resolvedSrc}
           alt={alt}
           fill={fill}
@@ -98,6 +106,7 @@ export default function DynamicImage({
         />
       ) : (
         <img
+          ref={imgRef}
           src={resolvedSrc}
           alt={alt}
           loading={loading ?? (priority ? 'eager' : 'lazy')}

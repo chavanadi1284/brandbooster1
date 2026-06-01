@@ -17,12 +17,14 @@ const categories = ['All', 'Strategy', 'Motion', 'Design', 'Growth'];
 export default function BlogPage() {
   const [activeCategory, setActiveCategory] = useState('All');
 
-  const filtered = useMemo(
-    () => (activeCategory === 'All' ? posts : posts.filter((post) => post.category === activeCategory)),
-    [activeCategory]
-  );
+  const featured = useMemo(() => posts.find((post) => post.featured) ?? posts[0], []);
 
-  const featured = posts.find((post) => post.featured) ?? posts[0];
+  const filtered = useMemo(() => {
+    if (activeCategory === 'All') {
+      return posts.filter((post) => !post.featured);
+    }
+    return posts.filter((post) => post.category === activeCategory);
+  }, [activeCategory]);
 
   return (
     <div className="mx-auto max-w-7xl px-4 pt-32 md:px-6 lg:pt-36">
@@ -51,19 +53,21 @@ export default function BlogPage() {
       </section>
 
       <section className="section-shell mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <motion.article
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.75, ease: 'easeOut' }}
-          className="rounded-[36px] border border-black/[0.06] bg-[linear-gradient(135deg,#061B3A,#08101f)] p-6 text-white md:p-10"
-        >
-          <p className="font-groove text-[11px] uppercase tracking-[0.38em] text-white/86">Featured article</p>
-          <h2 className="mt-4 max-w-xl font-display text-5xl uppercase leading-[0.92] tracking-[0.12em] md:text-7xl">{featured.title}</h2>
-          <p className="mt-6 max-w-2xl text-sm leading-7 text-white/86">{featured.copy}</p>
-          <div className="mt-8 overflow-hidden rounded-[28px] border border-[rgba(219,219,219,0.2)]">
-            <DynamicImage src={featured.coverImage} alt={featured.title} className="aspect-[16/10] w-full" />
-          </div>
-        </motion.article>
+        <div className="lg:sticky lg:top-32 h-fit">
+          <motion.article
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.75, ease: 'easeOut' }}
+            className="rounded-[36px] border border-black/[0.06] bg-[linear-gradient(135deg,#061B3A,#08101f)] p-6 text-white md:p-10"
+          >
+            <p className="font-groove text-[11px] uppercase tracking-[0.38em] text-white/86">Featured article</p>
+            <h2 className="mt-4 max-w-xl font-display text-5xl uppercase leading-[0.92] tracking-[0.12em] md:text-7xl">{featured.title}</h2>
+            <p className="mt-6 max-w-2xl text-sm leading-7 text-white/86">{featured.copy}</p>
+            <div className="mt-8 overflow-hidden rounded-[28px] border border-[rgba(219,219,219,0.2)]">
+              <DynamicImage src={featured.coverImage} alt={featured.title} className="aspect-[16/10] w-full" />
+            </div>
+          </motion.article>
+        </div>
 
         <div className="grid gap-4">
           {filtered.map((post, index) => (
