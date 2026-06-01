@@ -53,8 +53,8 @@ export default function BlogPage() {
       <section className="section-shell mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
         <motion.article
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.75, ease: 'easeOut' }}
           className="rounded-[36px] border border-black/[0.06] bg-[linear-gradient(135deg,#061B3A,#08101f)] p-6 text-white md:p-10"
         >
           <p className="font-groove text-[11px] uppercase tracking-[0.38em] text-white/86">Featured article</p>

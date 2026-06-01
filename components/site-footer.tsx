@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FaInstagram, FaLinkedin, FaYoutube, FaBehance, FaXTwitter } from 'react-icons/fa6';
 
 const footerLinks = [
   { href: '/about', label: 'About' },
@@ -6,6 +7,14 @@ const footerLinks = [
   { href: '/services', label: 'Services' },
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' }
+];
+
+const socialLinks = [
+  { href: 'https://instagram.com/brandboosters', icon: FaInstagram, label: 'Instagram' },
+  { href: 'https://twitter.com/brandboosters', icon: FaXTwitter, label: 'Twitter' },
+  { href: 'https://linkedin.com/company/brandboosters', icon: FaLinkedin, label: 'LinkedIn' },
+  { href: 'https://youtube.com/brandboosters', icon: FaYoutube, label: 'YouTube' },
+  { href: 'https://behance.net/brandboosters', icon: FaBehance, label: 'Behance' }
 ];
 
 export default function SiteFooter() {
@@ -17,6 +26,25 @@ export default function SiteFooter() {
           <p className="mt-4 max-w-lg text-sm leading-7 text-white/84 md:text-base">
             A premium creative agency shaping brands, motion systems, and digital experiences that feel decisive, cinematic, and unmistakably modern.
           </p>
+
+          {/* Social Media Links */}
+          <div className="flex gap-4 mt-6">
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/80 transition hover:border-orange hover:bg-orange hover:text-dark cursor-pointer"
+                  aria-label={social.label}
+                >
+                  <Icon size={18} />
+                </a>
+              );
+            })}
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3">
